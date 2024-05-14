@@ -12,8 +12,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.kproject.simpleplayer.R
 import com.kproject.simpleplayer.presentation.screens.components.player.PlaybackState
@@ -71,6 +71,7 @@ fun MainControlButtons(
             )
             if (playerState.isStateBuffering) {
                 CircularProgressIndicator(
+                    color = Color.White,
                     modifier = Modifier
                         .align(Alignment.Center)
                         .matchParentSize(),

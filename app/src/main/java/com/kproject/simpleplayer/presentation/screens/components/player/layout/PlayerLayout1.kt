@@ -13,6 +13,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.kproject.simpleplayer.presentation.screens.components.player.PlayerAction
@@ -36,6 +37,7 @@ fun BoxScope.PlayerLayout1(
 ) {
     if (playerState.isStateBuffering) {
         CircularProgressIndicator(
+            color = Color.White,
             strokeWidth = 6.dp,
             modifier = Modifier
                 .align(Alignment.Center)
