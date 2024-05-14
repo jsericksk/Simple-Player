@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Simple Player</string>
+
+    <string name="assets_videos">Assets Videos</string>
+    <string name="remote_videos">Remote Videos</string>
+
+    <string name="player_ui_options">Player UI Options</string>
+    <string name="player_ui_layout">Layout</string>
+    <string name="player_ui_show_seek_buttons">Show seek buttons</string>
+    <string name="player_ui_auto_hide_buttons">Auto hide buttons</string>
+    <string name="player_ui_time_to_hide_buttons">Time to hide buttons</string>
+
+</resources>
