@@ -24,8 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kproject.simpleplayer.presentation.commom.Utils
 import com.kproject.simpleplayer.presentation.screens.components.player.PlayerAction
-import com.kproject.simpleplayer.presentation.screens.components.player.PlayerState
-import com.kproject.simpleplayer.presentation.screens.components.player.fakePlayerState
 import com.kproject.simpleplayer.presentation.theme.PreviewTheme
 import dev.vivvvek.seeker.Seeker
 import dev.vivvvek.seeker.SeekerDefaults
@@ -36,33 +34,35 @@ private val textFontSize = 14.sp
 
 @Composable
 fun ProgressContent(
-    playerState: PlayerState,
+    currentPlaybackPosition: Long,
+    currentBufferedPercentage: Float,
+    videoDuration: Long,
     onPlayerAction: (PlayerAction) -> Unit,
     progressTextLayout: ProgressTextLayout,
     modifier: Modifier = Modifier
 ) {
     var isChangingPosition by remember { mutableStateOf(false) }
     var temporaryPlaybackPosition by remember { mutableLongStateOf(0L) }
-    val seekerValue = remember(playerState.currentPlaybackPosition, isChangingPosition) {
-        if (isChangingPosition) temporaryPlaybackPosition else playerState.currentPlaybackPosition
+    val seekerValue = remember(currentPlaybackPosition, isChangingPosition) {
+        if (isChangingPosition) temporaryPlaybackPosition else currentPlaybackPosition
     }
 
-    val currentVideoTime = remember(seekerValue) {
+    val formattedCurrentVideoTime = remember(seekerValue) {
         Utils.formatVideoDuration(seekerValue)
     }
-    val videoDuration = remember(playerState.videoDuration) {
-        Utils.formatVideoDuration(playerState.videoDuration)
+    val formattedVideoDuration = remember(videoDuration) {
+        Utils.formatVideoDuration(videoDuration)
     }
 
     MainContent(
         progressTextLayout = progressTextLayout,
-        currentVideoTime = currentVideoTime,
-        videoDuration = videoDuration,
+        currentVideoTime = formattedCurrentVideoTime,
+        videoDuration = formattedVideoDuration,
         modifier = modifier
     ) { progressModifier ->
         Seeker(
             value = seekerValue.toFloat(),
-            readAheadValue = playerState.currentBufferedPercentage,
+            readAheadValue = currentBufferedPercentage,
             onValueChange = { value ->
                 temporaryPlaybackPosition = value.toLong()
                 isChangingPosition = true
@@ -75,7 +75,7 @@ fun ProgressContent(
                 onPlayerAction.invoke(PlayerAction.SeekTo(temporaryPlaybackPosition))
                 temporaryPlaybackPosition = 0
             },
-            range = 0f..playerState.videoDuration.toFloat(),
+            range = 0f..videoDuration.toFloat(),
             colors = SeekerDefaults.seekerColors(
                 progressColor = MaterialTheme.colorScheme.primaryContainer,
                 thumbColor = MaterialTheme.colorScheme.primaryContainer,
@@ -235,20 +235,29 @@ enum class ProgressTextLayout {
 private fun ProgressContentPreview() {
     PreviewTheme {
         Column {
+            val currentPlaybackPosition = 3000L
+            val videoDuration = 10000L
+            val currentBufferedPercentage = 60 * (videoDuration.toFloat() / 100)
             ProgressContent(
-                playerState = fakePlayerState,
+                currentPlaybackPosition = currentPlaybackPosition,
+                currentBufferedPercentage = currentBufferedPercentage,
+                videoDuration = videoDuration,
                 onPlayerAction = {},
                 progressTextLayout = ProgressTextLayout.Default
             )
             Spacer(Modifier.height(20.dp))
             ProgressContent(
-                playerState = fakePlayerState,
+                currentPlaybackPosition = currentPlaybackPosition,
+                currentBufferedPercentage = currentBufferedPercentage,
+                videoDuration = videoDuration,
                 onPlayerAction = {},
                 progressTextLayout = ProgressTextLayout.YouTube
             )
             Spacer(Modifier.height(20.dp))
             ProgressContent(
-                playerState = fakePlayerState,
+                currentPlaybackPosition = currentPlaybackPosition,
+                currentBufferedPercentage = currentBufferedPercentage,
+                videoDuration = videoDuration,
                 onPlayerAction = {},
                 progressTextLayout = ProgressTextLayout.ExoPlayer
             )

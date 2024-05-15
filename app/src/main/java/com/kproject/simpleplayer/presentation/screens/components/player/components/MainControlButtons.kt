@@ -18,13 +18,17 @@ import androidx.compose.ui.unit.dp
 import com.kproject.simpleplayer.R
 import com.kproject.simpleplayer.presentation.screens.components.player.PlaybackState
 import com.kproject.simpleplayer.presentation.screens.components.player.PlayerAction
-import com.kproject.simpleplayer.presentation.screens.components.player.PlayerState
-import com.kproject.simpleplayer.presentation.screens.components.player.fakePlayerState
 import com.kproject.simpleplayer.presentation.theme.PreviewTheme
 
 @Composable
 fun MainControlButtons(
-    playerState: PlayerState,
+    showSeekButtons: Boolean,
+    isNextButtonAvailable: Boolean,
+    isSeekForwardButtonAvailable: Boolean,
+    isSeekBackButtonAvailable: Boolean,
+    playbackState: PlaybackState,
+    isPlaying: Boolean,
+    isStateBuffering: Boolean,
     onPlayerAction: (PlayerAction) -> Unit,
     allButtonColorsFilled: Boolean,
     modifier: Modifier = Modifier,
@@ -36,10 +40,10 @@ fun MainControlButtons(
             .fillMaxWidth()
             .padding(12.dp)
     ) {
-        if (playerState.uiOptions.showSeekButtons) {
+        if (showSeekButtons) {
             CustomIconButton(
                 iconResId = R.drawable.round_replay_5_24,
-                enabled = playerState.isSeekBackButtonAvailable,
+                enabled = isSeekBackButtonAvailable,
                 filledDefaultContainerColor = allButtonColorsFilled,
                 onClick = {
                     onPlayerAction.invoke(PlayerAction.SeekBack)
@@ -54,9 +58,9 @@ fun MainControlButtons(
             }
         )
 
-        val centerIcon = if (playerState.playbackState == PlaybackState.Ended) {
+        val centerIcon = if (playbackState == PlaybackState.Ended) {
             R.drawable.round_replay_24
-        } else if (playerState.isPlaying) {
+        } else if (isPlaying) {
             R.drawable.round_pause_24
         } else {
             R.drawable.round_play_arrow_24
@@ -69,7 +73,7 @@ fun MainControlButtons(
                     onPlayerAction.invoke(PlayerAction.PlayOrPause)
                 }
             )
-            if (playerState.isStateBuffering) {
+            if (isStateBuffering) {
                 CircularProgressIndicator(
                     color = Color.White,
                     modifier = Modifier
@@ -80,16 +84,16 @@ fun MainControlButtons(
         }
         CustomIconButton(
             iconResId = R.drawable.round_skip_next_24,
-            enabled = playerState.isNextButtonAvailable,
+            enabled = isNextButtonAvailable,
             filledDefaultContainerColor = allButtonColorsFilled,
             onClick = {
                 onPlayerAction.invoke(PlayerAction.Next)
             }
         )
-        if (playerState.uiOptions.showSeekButtons) {
+        if (showSeekButtons) {
             CustomIconButton(
                 iconResId = R.drawable.round_forward_5_24,
-                enabled = playerState.isSeekForwardButtonAvailable,
+                enabled = isSeekForwardButtonAvailable,
                 filledDefaultContainerColor = allButtonColorsFilled,
                 onClick = {
                     onPlayerAction.invoke(PlayerAction.SeekForward)
@@ -105,13 +109,37 @@ private fun MainControlButtonsPreview() {
     PreviewTheme {
         Column {
             MainControlButtons(
-                playerState = fakePlayerState,
+                showSeekButtons = true,
+                isNextButtonAvailable = true,
+                isSeekForwardButtonAvailable = true,
+                isSeekBackButtonAvailable = true,
+                playbackState = PlaybackState.Ready,
+                isPlaying = true,
+                isStateBuffering = false,
                 onPlayerAction = {},
                 allButtonColorsFilled = true
             )
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(12.dp))
             MainControlButtons(
-                playerState = fakePlayerState,
+                showSeekButtons = false,
+                isNextButtonAvailable = true,
+                isSeekForwardButtonAvailable = true,
+                isSeekBackButtonAvailable = true,
+                playbackState = PlaybackState.Ready,
+                isPlaying = true,
+                isStateBuffering = false,
+                onPlayerAction = {},
+                allButtonColorsFilled = true
+            )
+            Spacer(Modifier.height(12.dp))
+            MainControlButtons(
+                showSeekButtons = true,
+                isNextButtonAvailable = false,
+                isSeekForwardButtonAvailable = true,
+                isSeekBackButtonAvailable = true,
+                playbackState = PlaybackState.Ready,
+                isPlaying = true,
+                isStateBuffering = false,
                 onPlayerAction = {},
                 allButtonColorsFilled = false
             )

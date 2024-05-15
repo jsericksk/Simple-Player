@@ -52,7 +52,13 @@ fun BoxScope.PlayerLayout2(
         modifier = Modifier.align(Alignment.Center)
     ) {
         MainControlButtons(
-            playerState = playerState,
+            showSeekButtons = playerState.uiOptions.showSeekButtons,
+            isNextButtonAvailable = playerState.isNextButtonAvailable,
+            isSeekForwardButtonAvailable = playerState.isSeekForwardButtonAvailable,
+            isSeekBackButtonAvailable = playerState.isSeekBackButtonAvailable,
+            playbackState = playerState.playbackState,
+            isPlaying = playerState.isPlaying,
+            isStateBuffering = playerState.isStateBuffering,
             onPlayerAction = onPlayerAction,
             allButtonColorsFilled = false
         )
@@ -77,13 +83,18 @@ private fun BottomContent(
 ) {
     Column(modifier = modifier.safeDrawingPadding()) {
         SecondaryControlButtons(
-            playerState = playerState,
+            resizeMode = playerState.resizeMode,
+            repeatMode = playerState.repeatMode,
+            playbackSpeed = playerState.playbackSpeed,
+            isLandscapeMode = playerState.isLandscapeMode,
             onPlayerAction = onPlayerAction,
             modifier = Modifier.align(Alignment.End)
         )
         Spacer(Modifier.height(16.dp))
         ProgressContent(
-            playerState = playerState,
+            currentPlaybackPosition = playerState.currentPlaybackPosition,
+            currentBufferedPercentage = playerState.currentBufferedPercentage,
+            videoDuration = playerState.videoDuration,
             onPlayerAction = onPlayerAction,
             progressTextLayout = ProgressTextLayout.YouTube
         )
