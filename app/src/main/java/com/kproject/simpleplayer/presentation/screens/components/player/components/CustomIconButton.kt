@@ -1,10 +1,13 @@
 package com.kproject.simpleplayer.presentation.screens.components.player.components
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -12,7 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.kproject.simpleplayer.R
+import com.kproject.simpleplayer.presentation.theme.PreviewTheme
 
 @Composable
 fun CustomIconButton(
@@ -41,13 +47,13 @@ fun CustomIconButton(
         disabledContainerColor = defaultDisabledContainerColor,
         disabledContentColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.40f)
     )
-    IconButton(
+    FilledIconButton(
         onClick = onClick,
         enabled = enabled,
         colors = iconColors,
         modifier = modifier
             .padding(horizontal = 8.dp)
-            .size(48.dp)
+            .size(54.dp)
     ) {
         Icon(
             painter = painterResource(id = iconResId),
@@ -56,5 +62,32 @@ fun CustomIconButton(
                 .size(32.dp)
                 .padding(if (reduceIconSize) 2.dp else 0.dp)
         )
+    }
+}
+
+@Preview
+@Composable
+private fun CustomIconButtonPreview() {
+    PreviewTheme {
+        Column {
+            CustomIconButton(
+                iconResId = R.drawable.round_play_arrow_24,
+                onClick = {}
+            )
+            Spacer(Modifier.height(24.dp))
+            CustomIconButton(
+                iconResId = R.drawable.round_aspect_ratio_24,
+                onClick = {},
+                reduceIconSize = true,
+                filledDefaultContainerColor = true
+            )
+            Spacer(Modifier.height(24.dp))
+            CustomIconButton(
+                iconResId = R.drawable.round_skip_next_24,
+                onClick = {},
+                enabled = false,
+                filledDefaultContainerColor = false
+            )
+        }
     }
 }
