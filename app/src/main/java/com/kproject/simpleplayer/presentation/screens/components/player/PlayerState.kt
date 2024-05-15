@@ -2,6 +2,7 @@ package com.kproject.simpleplayer.presentation.screens.components.player
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.RepeatModeUtil
 import androidx.media3.ui.AspectRatioFrameLayout
@@ -17,8 +18,8 @@ data class PlayerState(
     val bufferedPercentage: Int = 0,
     val videoDuration: Long = 0L,
     val playbackState: PlaybackState = PlaybackState.Idle,
+    val playbackException: PlaybackException? = null,
 
-    // todo: add error state
     val resizeMode: ResizeMode = ResizeMode.Fit,
     val repeatMode: RepeatMode = RepeatMode.None,
     val isPlaying: Boolean = true,
@@ -124,7 +125,7 @@ enum class RepeatMode(val value: Int) {
         }
 
         fun Int.toRepeatMode(): RepeatMode {
-            return when(this) {
+            return when (this) {
                 RepeatModeUtil.REPEAT_TOGGLE_MODE_NONE -> None
                 RepeatModeUtil.REPEAT_TOGGLE_MODE_ONE -> One
                 RepeatModeUtil.REPEAT_TOGGLE_MODE_ALL -> ModeAll

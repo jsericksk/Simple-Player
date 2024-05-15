@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Simple Player</string>
+    <string name="button_ok">OK</string>
 
     <string name="assets_videos">Assets Videos</string>
     <string name="remote_videos">Remote Videos</string>
@@ -9,5 +10,9 @@
     <string name="player_ui_show_seek_buttons">Show seek buttons</string>
     <string name="player_ui_auto_hide_buttons">Auto hide buttons</string>
     <string name="player_ui_time_to_hide_buttons">Time to hide buttons</string>
+
+    <string name="player_error">Error</string>
+    <string name="player_error_message">Oops, it looks like there was an error! :(
+        \n\nError message: %1$s \nCode name: %2$s</string>
 
 </resources>

@@ -2,6 +2,12 @@ package com.kproject.simpleplayer.presentation.screens.player
 
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -11,9 +17,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import com.kproject.simpleplayer.R
 import com.kproject.simpleplayer.presentation.commom.Utils
 import com.kproject.simpleplayer.presentation.screens.components.LockScreenOrientation
 import com.kproject.simpleplayer.presentation.screens.components.player.PlayerAction
@@ -94,6 +104,14 @@ fun PlayerScreen(
             onArrowBackIconClick = onNavigateBack,
             onOptionsIconClick = { showPlayerUiOptionsDialog = true }
         )
+
+
+        playerState.playbackException?.let { playbackException ->
+            ErrorAlertDialog(
+                playbackException = playbackException,
+                onButtonOkClick = onNavigateBack
+            )
+        }
     }
 
     PlayerUiOptionsDialog(
@@ -149,4 +167,42 @@ private fun BoxScope.PlayerLayout(
             )
         }
     }
+}
+
+@Composable
+private fun ErrorAlertDialog(
+    playbackException: PlaybackException,
+    onButtonOkClick: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = {},
+        icon = {
+            Icon(
+                imageVector = Icons.Default.Info,
+                contentDescription = null
+            )
+        },
+        title = {
+            Text(
+                text = stringResource(id = R.string.player_error)
+            )
+        },
+        text = {
+            Text(
+                text = stringResource(
+                    id = R.string.player_error_message,
+                    playbackException.message ?: "Unknown",
+                    playbackException.errorCodeName
+                ),
+                fontSize = 16.sp
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onButtonOkClick) {
+                Text(
+                    text = stringResource(id = R.string.button_ok)
+                )
+            }
+        }
+    )
 }

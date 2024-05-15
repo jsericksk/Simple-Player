@@ -1,18 +1,17 @@
 package com.kproject.simpleplayer.presentation.screens.components.player
 
-import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.kproject.simpleplayer.presentation.screens.components.player.PlaybackState.Companion.toPlaybackState
 import kotlinx.coroutines.android.awaitFrame
 
-@SuppressLint("UnsafeOptInUsageError")
 class MediaPlayerManager(
     private val player: ExoPlayer,
     private val playerStateHolder: PlayerStateHolder
@@ -23,7 +22,6 @@ class MediaPlayerManager(
     private val listener = object : Player.Listener {
 
         override fun onEvents(player: Player, events: Player.Events) {
-            super.onEvents(player, events)
             playerStateHolder.onPlayerStateChange(
                 playerState.copy(
                     isNextButtonAvailable = isNextButtonAvailable(),
@@ -38,7 +36,6 @@ class MediaPlayerManager(
         }
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-            super.onMediaItemTransition(mediaItem, reason)
             playerStateHolder.onPlayerStateChange(
                 playerState.copy(
                     mediaItemIndex = player.currentMediaItemIndex,
@@ -68,6 +65,12 @@ class MediaPlayerManager(
                         height = videoSize.height
                     )
                 )
+            )
+        }
+
+        override fun onPlayerErrorChanged(playbackException: PlaybackException?) {
+            playerStateHolder.onPlayerStateChange(
+                playerState.copy(playbackException = playbackException)
             )
         }
     }
