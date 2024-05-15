@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kproject.simpleplayer.R
+import com.kproject.simpleplayer.presentation.screens.components.LockScreenOrientation
 import com.kproject.simpleplayer.presentation.screens.player.model.MediaType
 import com.kproject.simpleplayer.presentation.theme.PreviewTheme
 
@@ -60,6 +61,8 @@ fun HomeScreen(
                 }
             )
         }
+        
+        LockScreenOrientation(isLandscapeMode = false)
     }
 }
 

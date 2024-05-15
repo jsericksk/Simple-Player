@@ -15,7 +15,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import com.kproject.simpleplayer.presentation.commom.Utils
-import com.kproject.simpleplayer.presentation.screens.components.ScreenOrientationManager
+import com.kproject.simpleplayer.presentation.screens.components.LockScreenOrientation
 import com.kproject.simpleplayer.presentation.screens.components.player.PlayerAction
 import com.kproject.simpleplayer.presentation.screens.components.player.PlayerLayout
 import com.kproject.simpleplayer.presentation.screens.components.player.PlayerState
@@ -105,7 +105,7 @@ fun PlayerScreen(
         }
     )
 
-    ScreenOrientationManager(isLandscapeMode = playerState.isLandscapeMode)
+    LockScreenOrientation(isLandscapeMode = playerState.isLandscapeMode)
 }
 
 @Composable
