@@ -69,15 +69,13 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+    // Navigation Compose
+    implementation(libs.androidx.navigation.compose)
+
     // Dagger-Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
-
-    // Voyager
-    implementation(libs.voyager.navigator)
-    implementation(libs.voyager.transitions)
-    implementation(libs.voyager.hilt)
 
     // Media3
     implementation(libs.androidx.media3.exoplayer)

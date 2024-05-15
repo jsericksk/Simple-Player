@@ -9,10 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.transitions.SlideOrientation
-import cafe.adriel.voyager.transitions.SlideTransition
-import com.kproject.simpleplayer.presentation.screens.home.HomeScreen
+import com.kproject.simpleplayer.presentation.navigation.AppNavHost
 import com.kproject.simpleplayer.presentation.theme.SimplePlayerTheme
 
 class MainActivity : ComponentActivity() {
@@ -27,12 +24,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    Navigator(screen = HomeScreen()) { navigator ->
-                        SlideTransition(
-                            navigator = navigator,
-                            orientation = SlideOrientation.Horizontal
-                        )
-                    }
+                    AppNavHost()
                 }
             }
         }

@@ -14,9 +14,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import com.kproject.simpleplayer.presentation.commom.Utils
 import com.kproject.simpleplayer.presentation.screens.components.ScreenOrientationManager
 import com.kproject.simpleplayer.presentation.screens.components.player.PlayerAction
@@ -33,21 +30,9 @@ import com.kproject.simpleplayer.presentation.screens.player.components.PlayerUi
 import com.kproject.simpleplayer.presentation.screens.player.model.MediaType
 import kotlinx.coroutines.delay
 
-data class PlayerScreen(private val mediaType: MediaType) : Screen {
-
-    @Composable
-    override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
-        PlayerScreenContent(
-            mediaType = mediaType,
-            onNavigateBack = { navigator.pop() }
-        )
-    }
-}
-
 @OptIn(UnstableApi::class)
 @Composable
-fun PlayerScreenContent(
+fun PlayerScreen(
     mediaType: MediaType,
     onNavigateBack: () -> Unit
 ) {

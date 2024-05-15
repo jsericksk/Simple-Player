@@ -1,25 +1,19 @@
 package com.kproject.simpleplayer.presentation.screens.components.player
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
+import androidx.lifecycle.viewmodel.compose.saveable
 
-private const val PLAYER_STATE_KEY = "playerState"
+class PlayerStateHolder(savedStateHandle: SavedStateHandle) : ViewModel() {
 
-class PlayerStateHolder(private val savedStateHandle: SavedStateHandle) : ViewModel() {
-    var playerState: PlayerState by mutableStateOf(PlayerState())
-        private set
-
-    init {
-        savedStateHandle.get<PlayerState>(PLAYER_STATE_KEY)?.let { playerState = it }
+    @OptIn(SavedStateHandleSaveableApi::class)
+    var playerState: PlayerState by savedStateHandle.saveable {
+        mutableStateOf(PlayerState())
     }
 
     fun onPlayerStateChange(newPlayerState: PlayerState) {
         playerState = newPlayerState
-        savedStateHandle[PLAYER_STATE_KEY] = newPlayerState
     }
 }

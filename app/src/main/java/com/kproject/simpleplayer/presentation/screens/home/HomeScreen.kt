@@ -20,30 +20,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import com.kproject.simpleplayer.R
-import com.kproject.simpleplayer.presentation.screens.player.PlayerScreen
 import com.kproject.simpleplayer.presentation.screens.player.model.MediaType
 import com.kproject.simpleplayer.presentation.theme.PreviewTheme
 
-class HomeScreen : Screen {
-
-    @Composable
-    override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
-        HomeScreenContent(
-            onNavigateToPlayerScreen = { mediaType ->
-                navigator.push(PlayerScreen(mediaType = mediaType))
-            }
-        )
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HomeScreenContent(
+fun HomeScreen(
     onNavigateToPlayerScreen: (mediaType: MediaType) -> Unit
 ) {
     Scaffold(
@@ -102,7 +85,7 @@ private fun ButtonItem(
 @Composable
 private fun HomeScreenPreview() {
     PreviewTheme {
-        HomeScreenContent(
+        HomeScreen(
             onNavigateToPlayerScreen = {}
         )
     }
