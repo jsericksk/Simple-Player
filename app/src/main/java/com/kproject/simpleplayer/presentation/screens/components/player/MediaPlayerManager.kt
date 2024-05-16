@@ -36,12 +36,14 @@ class MediaPlayerManager(
         }
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-            playerStateHolder.onPlayerStateChange(
-                playerState.copy(
-                    mediaItemIndex = player.currentMediaItemIndex,
-                    videoDuration = player.duration.coerceAtLeast(0L)
+            if (playerState.mediaItemIndex != player.currentMediaItemIndex) {
+                playerStateHolder.onPlayerStateChange(
+                    playerState.copy(
+                        mediaItemIndex = player.currentMediaItemIndex,
+                        videoDuration = player.duration.coerceAtLeast(0L)
+                    )
                 )
-            )
+            }
         }
 
         override fun onPlaybackStateChanged(@Player.State playbackState: Int) {
