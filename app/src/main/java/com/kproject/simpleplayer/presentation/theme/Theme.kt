@@ -52,7 +52,7 @@ private val darkScheme = darkColorScheme(
 @Composable
 fun SimplePlayerTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
     val colorScheme = darkScheme
     val view = LocalView.current
@@ -60,6 +60,7 @@ fun SimplePlayerTheme(
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.primary.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
 
