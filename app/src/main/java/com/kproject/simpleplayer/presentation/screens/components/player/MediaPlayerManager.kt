@@ -36,10 +36,10 @@ class MediaPlayerManager(
         }
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-            if (playerState.mediaItemIndex != player.currentMediaItemIndex) {
+            if (playerState.currentMediaItemIndex != player.currentMediaItemIndex) {
                 playerStateHolder.onPlayerStateChange(
                     playerState.copy(
-                        mediaItemIndex = player.currentMediaItemIndex,
+                        currentMediaItemIndex = player.currentMediaItemIndex,
                         videoDuration = player.duration.coerceAtLeast(0L)
                     )
                 )
@@ -86,7 +86,7 @@ class MediaPlayerManager(
         player.playWhenReady = playerState.playWhenReady
         player.repeatMode = playerState.repeatMode.value
         player.shuffleModeEnabled = playerState.shuffleModeEnabled
-        player.seekTo(playerState.mediaItemIndex, playerState.currentPlaybackPosition)
+        player.seekTo(playerState.currentMediaItemIndex, playerState.currentPlaybackPosition)
         player.setPlaybackSpeed(playerState.playbackSpeed)
     }
 
@@ -113,14 +113,18 @@ class MediaPlayerManager(
                         playerState.currentPlaybackPosition + SeekForwardIncrement
                 val updatedPlaybackPosition =
                         newCurrentPlaybackPosition.coerceAtMost(playerState.videoDuration)
-                playerStateHolder.onPlayerStateChange(playerState.copy(currentPlaybackPosition = updatedPlaybackPosition))
+                playerStateHolder.onPlayerStateChange(
+                    playerState.copy(currentPlaybackPosition = updatedPlaybackPosition)
+                )
                 player.seekForward()
             }
             is PlayerAction.SeekBack -> {
                 val newCurrentPlaybackPosition =
                         playerState.currentPlaybackPosition - SeekBackIncrement
                 val updatedPlaybackPosition = newCurrentPlaybackPosition.coerceAtLeast(0L)
-                playerStateHolder.onPlayerStateChange(playerState.copy(currentPlaybackPosition = updatedPlaybackPosition))
+                playerStateHolder.onPlayerStateChange(
+                    playerState.copy(currentPlaybackPosition = updatedPlaybackPosition)
+                )
                 player.seekBack()
             }
             is PlayerAction.SeekTo -> {
@@ -132,10 +136,14 @@ class MediaPlayerManager(
                 playerStateHolder.onPlayerStateChange(playerState.copy(uiOptions = action.uiOptions))
             }
             is PlayerAction.ChangeCurrentPlaybackPosition -> {
-                playerStateHolder.onPlayerStateChange(playerState.copy(currentPlaybackPosition = action.currentPlaybackPosition))
+                playerStateHolder.onPlayerStateChange(
+                    playerState.copy(currentPlaybackPosition = action.currentPlaybackPosition)
+                )
             }
             is PlayerAction.ChangeBufferedPercentage -> {
-                playerStateHolder.onPlayerStateChange(playerState.copy(bufferedPercentage = action.bufferedPercentage))
+                playerStateHolder.onPlayerStateChange(
+                    playerState.copy(bufferedPercentage = action.bufferedPercentage)
+                )
             }
             is PlayerAction.ChangeResizeMode -> {
                 playerStateHolder.onPlayerStateChange(playerState.copy(resizeMode = action.resizeMode))
@@ -149,7 +157,9 @@ class MediaPlayerManager(
             }
             is PlayerAction.ChangePlaybackSpeed -> {
                 player.setPlaybackSpeed(action.playbackSpeed)
-                playerStateHolder.onPlayerStateChange(playerState.copy(playbackSpeed = action.playbackSpeed))
+                playerStateHolder.onPlayerStateChange(
+                    playerState.copy(playbackSpeed = action.playbackSpeed)
+                )
             }
             is PlayerAction.ChangeShuffleMode -> {
                 if (isShuffleModeAvailable()) {
@@ -160,7 +170,9 @@ class MediaPlayerManager(
                 }
             }
             is PlayerAction.ChangeIsLandscapeMode -> {
-                playerStateHolder.onPlayerStateChange(playerState.copy(isLandscapeMode = action.isLandscapeMode))
+                playerStateHolder.onPlayerStateChange(
+                    playerState.copy(isLandscapeMode = action.isLandscapeMode)
+                )
             }
         }
     }

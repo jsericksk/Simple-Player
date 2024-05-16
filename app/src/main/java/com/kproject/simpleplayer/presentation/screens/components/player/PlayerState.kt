@@ -13,7 +13,7 @@ data class PlayerState(
     val uiOptions: PlayerUiOptions = PlayerUiOptions(),
 
     val playWhenReady: Boolean = true,
-    val mediaItemIndex: Int = 0,
+    val currentMediaItemIndex: Int = 0,
     val currentPlaybackPosition: Long = 0L,
     val bufferedPercentage: Int = 0,
     val videoDuration: Long = 0L,
