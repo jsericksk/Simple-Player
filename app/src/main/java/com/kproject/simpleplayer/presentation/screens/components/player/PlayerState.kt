@@ -11,6 +11,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class PlayerState(
     val uiOptions: PlayerUiOptions = PlayerUiOptions(),
+    val showMainUi: Boolean = true,
 
     val playWhenReady: Boolean = true,
     val currentMediaItemIndex: Int = 0,
@@ -50,6 +51,7 @@ sealed class PlayerAction {
     data class SeekTo(val positionMs: Long) : PlayerAction()
 
     data class ChangeUiOptions(val uiOptions: PlayerUiOptions) : PlayerAction()
+    data class ChangeShowMainUi(val showMainUi: Boolean) : PlayerAction()
     data class ChangeCurrentPlaybackPosition(val currentPlaybackPosition: Long) : PlayerAction()
     data class ChangeBufferedPercentage(val bufferedPercentage: Int) : PlayerAction()
     data class ChangeResizeMode(val resizeMode: ResizeMode) : PlayerAction()

@@ -14,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -22,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import com.kproject.simpleplayer.R
 import com.kproject.simpleplayer.presentation.commom.Utils
@@ -51,7 +51,9 @@ fun PlayerScreen(
     val mediaItems = remember { playerViewModel.getMediaItemList(mediaType = mediaType) }
 
     val exoPlayer = remember {
-        ExoPlayer.Builder(context).apply {
+        val renderersFactory = DefaultRenderersFactory(context)
+        renderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)
+        ExoPlayer.Builder(context, renderersFactory).apply {
             setSeekForwardIncrementMs(SeekForwardIncrement)
             setSeekBackIncrementMs(SeekBackIncrement)
         }.build().apply {
@@ -63,19 +65,18 @@ fun PlayerScreen(
 
     val mediaPlayerManager = rememberMediaPlayerManager(player = exoPlayer)
     val playerState = mediaPlayerManager.playerState
-    var showMainUi by rememberSaveable { mutableStateOf(true) }
     // Just to restart the delay to hide the main UI if the user performs some action (play/pause, for example)
     var lastPlayerActionTimeMillis by remember { mutableLongStateOf(0L) }
 
     // Hides the main UI after the time
     LaunchedEffect(
-        key1 = showMainUi,
+        key1 = playerState.showMainUi,
         key2 = playerState.uiOptions.autoHideButtons,
         key3 = lastPlayerActionTimeMillis
     ) {
         delay(playerState.uiOptions.timeToHideButtons)
         if (playerState.uiOptions.autoHideButtons) {
-            showMainUi = false
+            mediaPlayerManager.onPlayerAction(PlayerAction.ChangeShowMainUi(false))
         }
     }
 
@@ -85,12 +86,13 @@ fun PlayerScreen(
         mediaPlayerState = mediaPlayerManager,
         exoPlayer = exoPlayer,
         onPlayerViewClick = {
-            showMainUi = !showMainUi
+            val showMainUi = !playerState.showMainUi
             if (showMainUi) {
                 Utils.showSystemBars(context)
             } else {
                 Utils.hideSystemBars(context)
             }
+            mediaPlayerManager.onPlayerAction(PlayerAction.ChangeShowMainUi(showMainUi))
         }
     ) {
         PlayerLayout(
@@ -100,11 +102,10 @@ fun PlayerScreen(
                 lastPlayerActionTimeMillis = System.currentTimeMillis()
             },
             title = exoPlayer.mediaMetadata.title.toString(),
-            showMainUi = showMainUi,
+            showMainUi = playerState.showMainUi,
             onArrowBackIconClick = onNavigateBack,
             onOptionsIconClick = { showPlayerUiOptionsDialog = true }
         )
-
 
         playerState.playbackException?.let { playbackException ->
             ErrorAlertDialog(

@@ -135,6 +135,9 @@ class MediaPlayerManager(
             is PlayerAction.ChangeUiOptions -> {
                 playerStateHolder.onPlayerStateChange(playerState.copy(uiOptions = action.uiOptions))
             }
+            is PlayerAction.ChangeShowMainUi -> {
+                playerStateHolder.onPlayerStateChange(playerState.copy(showMainUi = action.showMainUi))
+            }
             is PlayerAction.ChangeCurrentPlaybackPosition -> {
                 playerStateHolder.onPlayerStateChange(
                     playerState.copy(currentPlaybackPosition = action.currentPlaybackPosition)
@@ -230,20 +233,25 @@ fun rememberMediaPlayerManager(player: ExoPlayer): MediaPlayerManager {
             playerStateHolder = playerStateHolder
         )
     }
-
-    // Observes and changes the current playback/buffered position
     val playerState = mediaPlayerManager.playerState
+
+    // Change the current playback position only while the video is playing
     LaunchedEffect(playerState.isPlaying) {
-        if (playerState.isPlaying) {
-            while (true) {
-                mediaPlayerManager.onPlayerAction(
-                    PlayerAction.ChangeCurrentPlaybackPosition(player.currentPosition)
-                )
-                mediaPlayerManager.onPlayerAction(
-                    PlayerAction.ChangeBufferedPercentage(player.bufferedPercentage)
-                )
-                awaitFrame()
-            }
+        while (playerState.isPlaying) {
+            mediaPlayerManager.onPlayerAction(
+                PlayerAction.ChangeCurrentPlaybackPosition(player.currentPosition)
+            )
+            awaitFrame()
+        }
+    }
+
+    // Change the buffered percentage only while displaying the main UI
+    LaunchedEffect(playerState.showMainUi) {
+        while (playerState.showMainUi) {
+            mediaPlayerManager.onPlayerAction(
+                PlayerAction.ChangeBufferedPercentage(player.bufferedPercentage)
+            )
+            awaitFrame()
         }
     }
 
