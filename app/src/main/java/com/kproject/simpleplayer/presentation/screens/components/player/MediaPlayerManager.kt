@@ -10,7 +10,7 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.kproject.simpleplayer.presentation.screens.components.player.PlaybackState.Companion.toPlaybackState
-import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.delay
 
 class MediaPlayerManager(
     private val player: ExoPlayer,
@@ -241,7 +241,7 @@ fun rememberMediaPlayerManager(player: ExoPlayer): MediaPlayerManager {
             mediaPlayerManager.onPlayerAction(
                 PlayerAction.ChangeCurrentPlaybackPosition(player.currentPosition)
             )
-            awaitFrame()
+            delay(300L)
         }
     }
 
@@ -251,7 +251,7 @@ fun rememberMediaPlayerManager(player: ExoPlayer): MediaPlayerManager {
             mediaPlayerManager.onPlayerAction(
                 PlayerAction.ChangeBufferedPercentage(player.bufferedPercentage)
             )
-            awaitFrame()
+            delay(300L)
         }
     }
 
