@@ -28,8 +28,8 @@ fun PlayerView(
     val context = LocalContext.current
     val playerView = remember {
         PlayerView(context).apply {
-            this.player = exoPlayer
             this.useController = false
+            this.player = exoPlayer
         }
     }
 
