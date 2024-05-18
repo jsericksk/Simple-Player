@@ -38,8 +38,6 @@ import com.kproject.simpleplayer.presentation.commom.Utils
 import com.kproject.simpleplayer.presentation.screens.components.LockScreenOrientation
 import com.kproject.simpleplayer.presentation.screens.components.exoplayer.PlayerAction
 import com.kproject.simpleplayer.presentation.screens.components.exoplayer.PlayerState
-import com.kproject.simpleplayer.presentation.screens.components.exoplayer.SeekBackIncrement
-import com.kproject.simpleplayer.presentation.screens.components.exoplayer.SeekForwardIncrement
 import com.kproject.simpleplayer.presentation.screens.components.exoplayer.components.MainControlButtons
 import com.kproject.simpleplayer.presentation.screens.components.exoplayer.components.ProgressContent
 import com.kproject.simpleplayer.presentation.screens.components.exoplayer.components.SecondaryControlButtons
@@ -54,10 +52,7 @@ fun PlayerScreen() {
     val mediaItems = remember { getMediaItemList() }
     val context = LocalContext.current
     val exoPlayer = remember {
-        ExoPlayer.Builder(context).apply {
-            setSeekForwardIncrementMs(SeekForwardIncrement)
-            setSeekBackIncrementMs(SeekBackIncrement)
-        }.build().apply {
+        ExoPlayer.Builder(context).build().apply {
             setMediaItems(mediaItems)
             prepare()
             playWhenReady = true

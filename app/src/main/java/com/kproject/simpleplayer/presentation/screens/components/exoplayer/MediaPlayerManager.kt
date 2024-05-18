@@ -6,7 +6,6 @@ import androidx.compose.runtime.remember
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
-import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.kproject.simpleplayer.presentation.screens.components.exoplayer.PlaybackState.Companion.toPlaybackState
@@ -91,23 +90,20 @@ class MediaPlayerManager(
                 player.seekToPrevious()
             }
             is PlayerAction.SeekForward -> {
-                val newCurrentPlaybackPosition =
-                        playerState.currentPlaybackPosition + SeekForwardIncrement
-                val updatedPlaybackPosition =
-                        newCurrentPlaybackPosition.coerceAtMost(playerState.videoDuration)
+                val updatedPlaybackPosition = (player.currentPosition + playerState.seekIncrementMs)
+                    .coerceAtMost(playerState.videoDuration)
                 playerStateHolder.onPlayerStateChange(
                     playerState.copy(currentPlaybackPosition = updatedPlaybackPosition)
                 )
-                player.seekForward()
+                player.seekTo(updatedPlaybackPosition)
             }
             is PlayerAction.SeekBack -> {
-                val newCurrentPlaybackPosition =
-                        playerState.currentPlaybackPosition - SeekBackIncrement
-                val updatedPlaybackPosition = newCurrentPlaybackPosition.coerceAtLeast(0L)
+                val updatedPlaybackPosition = (player.currentPosition - playerState.seekIncrementMs)
+                    .coerceAtLeast(0L)
                 playerStateHolder.onPlayerStateChange(
                     playerState.copy(currentPlaybackPosition = updatedPlaybackPosition)
                 )
-                player.seekBack()
+                player.seekTo(updatedPlaybackPosition)
             }
             is PlayerAction.SeekTo -> {
                 val positionMs = action.positionMs
