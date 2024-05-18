@@ -20,6 +20,7 @@ data class PlayerState(
     val videoDuration: Long = 0L,
     val playbackState: PlaybackState = PlaybackState.Idle,
     val playbackException: PlaybackException? = null,
+    val seekIncrementMs: Long = 5000L,
 
     val resizeMode: ResizeMode = ResizeMode.Fit,
     val repeatMode: RepeatMode = RepeatMode.None,
@@ -38,9 +39,6 @@ data class PlayerState(
     val currentBufferedPercentage: Float
         get() = bufferedPercentage * (videoDuration.toFloat() / 100)
 }
-
-const val SeekForwardIncrement = 5000L
-const val SeekBackIncrement = 5000L
 
 sealed class PlayerAction {
     data object PlayOrPause : PlayerAction()

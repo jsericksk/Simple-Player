@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import com.kproject.simpleplayer.R
 import com.kproject.simpleplayer.presentation.commom.Utils
@@ -30,8 +29,6 @@ import com.kproject.simpleplayer.presentation.screens.components.player.PlayerAc
 import com.kproject.simpleplayer.presentation.screens.components.player.PlayerLayout
 import com.kproject.simpleplayer.presentation.screens.components.player.PlayerState
 import com.kproject.simpleplayer.presentation.screens.components.player.PlayerView
-import com.kproject.simpleplayer.presentation.screens.components.player.SeekBackIncrement
-import com.kproject.simpleplayer.presentation.screens.components.player.SeekForwardIncrement
 import com.kproject.simpleplayer.presentation.screens.components.player.layout.PlayerLayout1
 import com.kproject.simpleplayer.presentation.screens.components.player.layout.PlayerLayout2
 import com.kproject.simpleplayer.presentation.screens.components.player.layout.PlayerLayout3
@@ -51,12 +48,7 @@ fun PlayerScreen(
     val mediaItems = remember { playerViewModel.getMediaItemList(mediaType = mediaType) }
 
     val exoPlayer = remember {
-        val renderersFactory = DefaultRenderersFactory(context)
-        renderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)
-        ExoPlayer.Builder(context, renderersFactory).apply {
-            setSeekForwardIncrementMs(SeekForwardIncrement)
-            setSeekBackIncrementMs(SeekBackIncrement)
-        }.build().apply {
+        ExoPlayer.Builder(context).build().apply {
             setMediaItems(mediaItems)
             prepare()
             playWhenReady = true
