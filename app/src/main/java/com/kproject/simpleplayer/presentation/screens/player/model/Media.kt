@@ -5,29 +5,7 @@ data class Media(
     val title: String,
 )
 
-enum class MediaType {
-    AssetVideos,
-    RemoteVideos
-}
-
-private const val assetPrefix = "file:///android_asset/"
-
-val assetMedia = listOf(
-    Media(
-        uri = "${assetPrefix}beach.mp4",
-        title = "People walking on the beach"
-    ),
-    Media(
-        uri = "${assetPrefix}dizzy.mp4",
-        title = "Dizzy"
-    ),
-    Media(
-        uri = "${assetPrefix}waterfall.mp4",
-        title = "Exploring the Beauty of Waterfall Scenery"
-    )
-)
-
-val remoteMedia = listOf(
+val mediaList = listOf(
     Media(
         uri = "https://storage.googleapis.com/downloads.webmproject.org/av1/exoplayer/bbb-av1-480p.mp4",
         title = "MP4: Big Buck Bunny"

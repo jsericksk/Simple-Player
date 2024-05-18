@@ -1,59 +1,60 @@
 package com.kproject.simpleplayer.presentation.screens.player
 
 import androidx.annotation.OptIn
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.media3.common.PlaybackException
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
-import com.kproject.simpleplayer.R
 import com.kproject.simpleplayer.presentation.commom.Utils
 import com.kproject.simpleplayer.presentation.screens.components.LockScreenOrientation
-import com.kproject.simpleplayer.presentation.screens.components.player.PlayerAction
-import com.kproject.simpleplayer.presentation.screens.components.player.PlayerLayout
-import com.kproject.simpleplayer.presentation.screens.components.player.PlayerState
-import com.kproject.simpleplayer.presentation.screens.components.player.PlayerView
-import com.kproject.simpleplayer.presentation.screens.components.player.SeekBackIncrement
-import com.kproject.simpleplayer.presentation.screens.components.player.SeekForwardIncrement
-import com.kproject.simpleplayer.presentation.screens.components.player.layout.PlayerLayout1
-import com.kproject.simpleplayer.presentation.screens.components.player.layout.PlayerLayout2
-import com.kproject.simpleplayer.presentation.screens.components.player.layout.PlayerLayout3
-import com.kproject.simpleplayer.presentation.screens.components.player.rememberMediaPlayerManager
-import com.kproject.simpleplayer.presentation.screens.player.components.PlayerUiOptionsDialog
-import com.kproject.simpleplayer.presentation.screens.player.model.MediaType
+import com.kproject.simpleplayer.presentation.screens.components.exoplayer.PlayerAction
+import com.kproject.simpleplayer.presentation.screens.components.exoplayer.PlayerState
+import com.kproject.simpleplayer.presentation.screens.components.exoplayer.SeekBackIncrement
+import com.kproject.simpleplayer.presentation.screens.components.exoplayer.SeekForwardIncrement
+import com.kproject.simpleplayer.presentation.screens.components.exoplayer.components.MainControlButtons
+import com.kproject.simpleplayer.presentation.screens.components.exoplayer.components.ProgressContent
+import com.kproject.simpleplayer.presentation.screens.components.exoplayer.components.SecondaryControlButtons
+import com.kproject.simpleplayer.presentation.screens.components.exoplayer.rememberMediaPlayerManager
+import com.kproject.simpleplayer.presentation.screens.player.model.mediaList
+import com.kproject.simpleplayer.presentation.theme.PreviewTheme
 import kotlinx.coroutines.delay
 
 @OptIn(UnstableApi::class)
 @Composable
-fun PlayerScreen(
-    mediaType: MediaType,
-    onNavigateBack: () -> Unit
-) {
+fun PlayerScreen() {
+    val mediaItems = remember { getMediaItemList() }
     val context = LocalContext.current
-    val playerViewModel: PlayerViewModel = viewModel()
-    val mediaItems = remember { playerViewModel.getMediaItemList(mediaType = mediaType) }
-
     val exoPlayer = remember {
-        val renderersFactory = DefaultRenderersFactory(context)
-        renderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)
-        ExoPlayer.Builder(context, renderersFactory).apply {
+        ExoPlayer.Builder(context).apply {
             setSeekForwardIncrementMs(SeekForwardIncrement)
             setSeekBackIncrementMs(SeekBackIncrement)
         }.build().apply {
@@ -71,30 +72,27 @@ fun PlayerScreen(
     // Hides the main UI after the time
     LaunchedEffect(
         key1 = playerState.showMainUi,
-        key2 = playerState.uiOptions.autoHideButtons,
-        key3 = lastPlayerActionTimeMillis
+        key2 = lastPlayerActionTimeMillis
     ) {
-        delay(playerState.uiOptions.timeToHideButtons)
-        if (playerState.uiOptions.autoHideButtons) {
-            mediaPlayerManager.onPlayerAction(PlayerAction.ChangeShowMainUi(false))
-        }
+        delay(5000L)
+        mediaPlayerManager.onPlayerAction(PlayerAction.ChangeShowMainUi(false))
     }
 
-    var showPlayerUiOptionsDialog by remember { mutableStateOf(false) }
-
-    PlayerView(
-        mediaPlayerState = mediaPlayerManager,
-        exoPlayer = exoPlayer,
-        onPlayerViewClick = {
-            val showMainUi = !playerState.showMainUi
-            if (showMainUi) {
-                Utils.showSystemBars(context)
-            } else {
-                Utils.hideSystemBars(context)
+    Box(modifier = Modifier.fillMaxSize()) {
+        PlayerView(
+            mediaPlayerState = mediaPlayerManager,
+            exoPlayer = exoPlayer,
+            onPlayerViewClick = {
+                val showMainUi = !playerState.showMainUi
+                if (showMainUi) {
+                    Utils.showSystemBars(context)
+                } else {
+                    Utils.hideSystemBars(context)
+                }
+                mediaPlayerManager.onPlayerAction(PlayerAction.ChangeShowMainUi(showMainUi))
             }
-            mediaPlayerManager.onPlayerAction(PlayerAction.ChangeShowMainUi(showMainUi))
-        }
-    ) {
+        )
+
         PlayerLayout(
             playerState = playerState,
             onPlayerAction = { action ->
@@ -102,108 +100,137 @@ fun PlayerScreen(
                 lastPlayerActionTimeMillis = System.currentTimeMillis()
             },
             title = exoPlayer.mediaMetadata.title.toString(),
-            showMainUi = playerState.showMainUi,
-            onArrowBackIconClick = onNavigateBack,
-            onOptionsIconClick = { showPlayerUiOptionsDialog = true }
+            showMainUi = playerState.showMainUi
         )
-
-        playerState.playbackException?.let { playbackException ->
-            ErrorAlertDialog(
-                playbackException = playbackException,
-                onButtonOkClick = onNavigateBack
-            )
-        }
     }
-
-    PlayerUiOptionsDialog(
-        showDialog = showPlayerUiOptionsDialog,
-        onDismiss = { showPlayerUiOptionsDialog = false },
-        uiOptions = playerState.uiOptions,
-        onUiOptionsChange = { uiOptions ->
-            mediaPlayerManager.onPlayerAction(PlayerAction.ChangeUiOptions(uiOptions))
-        }
-    )
 
     LockScreenOrientation(isLandscapeMode = playerState.isLandscapeMode)
 }
 
 @Composable
-private fun BoxScope.PlayerLayout(
+private fun PlayerLayout(
     playerState: PlayerState,
     onPlayerAction: (PlayerAction) -> Unit,
     title: String,
     showMainUi: Boolean,
-    onArrowBackIconClick: () -> Unit,
-    onOptionsIconClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    when (playerState.uiOptions.playerLayout) {
-        PlayerLayout.Layout1 -> {
-            PlayerLayout1(
-                playerState = playerState,
-                onPlayerAction = onPlayerAction,
-                title = title,
-                showMainUi = showMainUi,
-                onArrowBackIconClick = onArrowBackIconClick,
-                onOptionsIconClick = onOptionsIconClick
+    Box(modifier = modifier.fillMaxSize()) {
+        if (playerState.isStateBuffering) {
+            CircularProgressIndicator(
+                color = Color.White,
+                strokeWidth = 6.dp,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .size(80.dp),
             )
         }
-        PlayerLayout.Layout2 -> {
-            PlayerLayout2(
-                playerState = playerState,
-                onPlayerAction = onPlayerAction,
-                title = title,
-                showMainUi = showMainUi,
-                onArrowBackIconClick = onArrowBackIconClick,
-                onOptionsIconClick = onOptionsIconClick
-            )
+
+        AnimatedVisibility(
+            visible = showMainUi,
+            modifier = Modifier.align(Alignment.TopCenter)
+        ) {
+            TopBarTitle(title = title)
         }
-        PlayerLayout.Layout3 -> {
-            PlayerLayout3(
+
+        AnimatedVisibility(
+            visible = showMainUi,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        ) {
+            BottomContent(
                 playerState = playerState,
                 onPlayerAction = onPlayerAction,
-                title = title,
-                showMainUi = showMainUi,
-                onArrowBackIconClick = onArrowBackIconClick,
-                onOptionsIconClick = onOptionsIconClick
             )
         }
     }
 }
 
+@kotlin.OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-private fun ErrorAlertDialog(
-    playbackException: PlaybackException,
-    onButtonOkClick: () -> Unit
+private fun TopBarTitle(
+    title: String,
+    modifier: Modifier = Modifier
 ) {
-    AlertDialog(
-        onDismissRequest = {},
-        icon = {
-            Icon(
-                imageVector = Icons.Default.Info,
-                contentDescription = null
-            )
-        },
+    CenterAlignedTopAppBar(
         title = {
             Text(
-                text = stringResource(id = R.string.player_error)
+                text = title,
+                fontSize = 18.sp,
+                maxLines = 1,
+                modifier = Modifier.basicMarquee()
             )
         },
-        text = {
-            Text(
-                text = stringResource(
-                    id = R.string.player_error_message,
-                    playbackException.message ?: "Unknown",
-                    playbackException.errorCodeName
-                ),
-                fontSize = 16.sp
-            )
-        },
-        confirmButton = {
-            TextButton(onClick = onButtonOkClick) {
-                Text(
-                    text = stringResource(id = R.string.button_ok)
-                )
-            }
-        }
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(0.6f)
+        ),
+        modifier = modifier
     )
+}
+
+@Composable
+private fun BottomContent(
+    playerState: PlayerState,
+    onPlayerAction: (PlayerAction) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.safeDrawingPadding()) {
+        SecondaryControlButtons(
+            resizeMode = playerState.resizeMode,
+            repeatMode = playerState.repeatMode,
+            playbackSpeed = playerState.playbackSpeed,
+            isLandscapeMode = playerState.isLandscapeMode,
+            onPlayerAction = onPlayerAction,
+            modifier = Modifier.align(Alignment.End)
+        )
+        Spacer(Modifier.height(16.dp))
+        ProgressContent(
+            currentPlaybackPosition = playerState.currentPlaybackPosition,
+            currentBufferedPercentage = playerState.bufferedPercentage,
+            videoDuration = playerState.videoDuration,
+            onPlayerAction = onPlayerAction,
+        )
+        Spacer(Modifier.height(8.dp))
+        MainControlButtons(
+            isNextButtonAvailable = playerState.isNextButtonAvailable,
+            isSeekForwardButtonAvailable = playerState.isSeekForwardButtonAvailable,
+            isSeekBackButtonAvailable = playerState.isSeekBackButtonAvailable,
+            playbackState = playerState.playbackState,
+            isPlaying = playerState.isPlaying,
+            onPlayerAction = onPlayerAction,
+        )
+        Spacer(Modifier.height(8.dp))
+    }
+}
+
+@Preview
+@Composable
+private fun Preview() {
+    PreviewTheme {
+        PlayerLayout(
+            playerState = PlayerState(
+                currentPlaybackPosition = 3000,
+                videoDuration = 10000,
+                bufferedPercentage = 60
+            ),
+            onPlayerAction = {},
+            title = "Video Title",
+            showMainUi = true
+        )
+    }
+}
+
+private fun getMediaItemList(): List<MediaItem> {
+    val mediaItemList = mutableListOf<MediaItem>()
+    mediaList.forEachIndexed { index, media ->
+        val mediaMetadata = MediaMetadata.Builder()
+            .setTitle(media.title)
+            .build()
+        val mediaItem = MediaItem.Builder()
+            .setUri(media.uri)
+            .setMediaId(index.toString())
+            .setMediaMetadata(mediaMetadata)
+            .build()
+        mediaItemList.add(mediaItem)
+    }
+    return mediaItemList
 }

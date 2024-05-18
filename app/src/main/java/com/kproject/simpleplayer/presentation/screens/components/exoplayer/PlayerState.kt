@@ -1,8 +1,7 @@
-package com.kproject.simpleplayer.presentation.screens.components.player
+package com.kproject.simpleplayer.presentation.screens.components.exoplayer
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
-import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.RepeatModeUtil
 import androidx.media3.ui.AspectRatioFrameLayout
@@ -10,7 +9,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PlayerState(
-    val uiOptions: PlayerUiOptions = PlayerUiOptions(),
     val showMainUi: Boolean = true,
 
     val playWhenReady: Boolean = true,
@@ -19,7 +17,6 @@ data class PlayerState(
     val bufferedPercentage: Int = 0,
     val videoDuration: Long = 0L,
     val playbackState: PlaybackState = PlaybackState.Idle,
-    val playbackException: PlaybackException? = null,
 
     val resizeMode: ResizeMode = ResizeMode.Fit,
     val repeatMode: RepeatMode = RepeatMode.None,
@@ -28,15 +25,10 @@ data class PlayerState(
     val isSeekForwardButtonAvailable: Boolean = true,
     val isSeekBackButtonAvailable: Boolean = true,
     val playbackSpeed: Float = playbackSpeedNormal.speedValue,
-    val shuffleModeEnabled: Boolean = false,
-    val videoSize: VideoSize = VideoSize(0, 0),
     val isLandscapeMode: Boolean = false,
 ) : Parcelable {
     val isStateBuffering: Boolean
         get() = playbackState == PlaybackState.Buffering
-
-    val currentBufferedPercentage: Float
-        get() = bufferedPercentage * (videoDuration.toFloat() / 100)
 }
 
 const val SeekForwardIncrement = 5000L
@@ -50,29 +42,13 @@ sealed class PlayerAction {
     data object SeekBack : PlayerAction()
     data class SeekTo(val positionMs: Long) : PlayerAction()
 
-    data class ChangeUiOptions(val uiOptions: PlayerUiOptions) : PlayerAction()
     data class ChangeShowMainUi(val showMainUi: Boolean) : PlayerAction()
     data class ChangeCurrentPlaybackPosition(val currentPlaybackPosition: Long) : PlayerAction()
     data class ChangeBufferedPercentage(val bufferedPercentage: Int) : PlayerAction()
     data class ChangeResizeMode(val resizeMode: ResizeMode) : PlayerAction()
     data class ChangeRepeatMode(val repeatMode: RepeatMode) : PlayerAction()
     data class ChangePlaybackSpeed(val playbackSpeed: Float) : PlayerAction()
-    data class ChangeShuffleMode(val enabled: Boolean) : PlayerAction()
     data class ChangeIsLandscapeMode(val isLandscapeMode: Boolean) : PlayerAction()
-}
-
-@Parcelize
-data class PlayerUiOptions(
-    val playerLayout: PlayerLayout = PlayerLayout.Layout1,
-    val showSeekButtons: Boolean = true,
-    val autoHideButtons: Boolean = true,
-    val timeToHideButtons: Long = 7000L
-) : Parcelable
-
-enum class PlayerLayout {
-    Layout1,
-    Layout2,
-    Layout3
 }
 
 enum class PlaybackState(val value: Int) {
@@ -125,15 +101,6 @@ enum class RepeatMode(val value: Int) {
                 ModeAll -> None
             }
         }
-
-        fun Int.toRepeatMode(): RepeatMode {
-            return when (this) {
-                RepeatModeUtil.REPEAT_TOGGLE_MODE_NONE -> None
-                RepeatModeUtil.REPEAT_TOGGLE_MODE_ONE -> One
-                RepeatModeUtil.REPEAT_TOGGLE_MODE_ALL -> ModeAll
-                else -> None
-            }
-        }
     }
 }
 
@@ -159,9 +126,3 @@ data class VideoSize(
     val width: Int,
     val height: Int
 ) : Parcelable
-
-val fakePlayerState = PlayerState(
-    currentPlaybackPosition = 3000,
-    videoDuration = 10000,
-    bufferedPercentage = 60
-)

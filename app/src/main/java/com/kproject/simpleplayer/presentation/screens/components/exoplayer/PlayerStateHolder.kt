@@ -1,4 +1,4 @@
-package com.kproject.simpleplayer.presentation.screens.components.player
+package com.kproject.simpleplayer.presentation.screens.components.exoplayer
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle

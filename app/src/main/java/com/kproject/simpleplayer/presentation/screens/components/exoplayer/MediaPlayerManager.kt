@@ -1,4 +1,4 @@
-package com.kproject.simpleplayer.presentation.screens.components.player
+package com.kproject.simpleplayer.presentation.screens.components.exoplayer
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -9,7 +9,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import com.kproject.simpleplayer.presentation.screens.components.player.PlaybackState.Companion.toPlaybackState
+import com.kproject.simpleplayer.presentation.screens.components.exoplayer.PlaybackState.Companion.toPlaybackState
 import kotlinx.coroutines.delay
 
 class MediaPlayerManager(
@@ -58,23 +58,6 @@ class MediaPlayerManager(
         ) {
             playerStateHolder.onPlayerStateChange(playerState.copy(playWhenReady = playWhenReady))
         }
-
-        override fun onVideoSizeChanged(videoSize: androidx.media3.common.VideoSize) {
-            playerStateHolder.onPlayerStateChange(
-                playerState.copy(
-                    videoSize = VideoSize(
-                        width = videoSize.width,
-                        height = videoSize.height
-                    )
-                )
-            )
-        }
-
-        override fun onPlayerErrorChanged(playbackException: PlaybackException?) {
-            playerStateHolder.onPlayerStateChange(
-                playerState.copy(playbackException = playbackException)
-            )
-        }
     }
 
     init {
@@ -85,7 +68,6 @@ class MediaPlayerManager(
         player.addListener(listener)
         player.playWhenReady = playerState.playWhenReady
         player.repeatMode = playerState.repeatMode.value
-        player.shuffleModeEnabled = playerState.shuffleModeEnabled
         player.seekTo(playerState.currentMediaItemIndex, playerState.currentPlaybackPosition)
         player.setPlaybackSpeed(playerState.playbackSpeed)
     }
@@ -132,9 +114,6 @@ class MediaPlayerManager(
                 player.seekTo(positionMs)
                 playerStateHolder.onPlayerStateChange(playerState.copy(currentPlaybackPosition = positionMs))
             }
-            is PlayerAction.ChangeUiOptions -> {
-                playerStateHolder.onPlayerStateChange(playerState.copy(uiOptions = action.uiOptions))
-            }
             is PlayerAction.ChangeShowMainUi -> {
                 playerStateHolder.onPlayerStateChange(playerState.copy(showMainUi = action.showMainUi))
             }
@@ -164,14 +143,6 @@ class MediaPlayerManager(
                     playerState.copy(playbackSpeed = action.playbackSpeed)
                 )
             }
-            is PlayerAction.ChangeShuffleMode -> {
-                if (isShuffleModeAvailable()) {
-                    playerStateHolder.onPlayerStateChange(
-                        playerState.copy(shuffleModeEnabled = action.enabled)
-                    )
-                    player.shuffleModeEnabled = action.enabled
-                }
-            }
             is PlayerAction.ChangeIsLandscapeMode -> {
                 playerStateHolder.onPlayerStateChange(
                     playerState.copy(isLandscapeMode = action.isLandscapeMode)
@@ -200,10 +171,6 @@ class MediaPlayerManager(
 
     private fun isRepeatModeAvailable(): Boolean {
         return player.isCommandAvailable(Player.COMMAND_SET_REPEAT_MODE)
-    }
-
-    private fun isShuffleModeAvailable(): Boolean {
-        return player.isCommandAvailable(Player.COMMAND_SET_SHUFFLE_MODE)
     }
 
     private fun isNextButtonAvailable(): Boolean {

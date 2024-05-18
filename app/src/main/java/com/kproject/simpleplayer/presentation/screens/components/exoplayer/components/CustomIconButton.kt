@@ -1,4 +1,4 @@
-package com.kproject.simpleplayer.presentation.screens.components.player.components
+package com.kproject.simpleplayer.presentation.screens.components.exoplayer.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
@@ -27,30 +27,17 @@ fun CustomIconButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     contentDescription: String? = null,
-    reduceIconSize: Boolean = false,
-    colors: IconButtonColors? = null,
-    filledDefaultContainerColor: Boolean = true,
+    reducedIconSize: Boolean = false
 ) {
-    val defaultContainerColor = if (filledDefaultContainerColor) {
-        MaterialTheme.colorScheme.primaryContainer
-    } else {
-        Color.Unspecified
-    }
-    val defaultDisabledContainerColor = if (filledDefaultContainerColor) {
-        defaultContainerColor.copy(0.40f)
-    } else {
-        Color.Unspecified
-    }
-    val iconColors = colors ?: IconButtonDefaults.iconButtonColors(
-        containerColor = defaultContainerColor,
-        contentColor = Color.White,
-        disabledContainerColor = defaultDisabledContainerColor,
-        disabledContentColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.40f)
-    )
     FilledIconButton(
         onClick = onClick,
         enabled = enabled,
-        colors = iconColors,
+        colors = IconButtonDefaults.iconButtonColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = Color.White,
+            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(0.40f),
+            disabledContentColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.40f)
+        ),
         modifier = modifier
             .padding(horizontal = 8.dp)
             .size(54.dp)
@@ -60,7 +47,7 @@ fun CustomIconButton(
             contentDescription = contentDescription,
             modifier = Modifier
                 .size(32.dp)
-                .padding(if (reduceIconSize) 2.dp else 0.dp)
+                .padding(if (reducedIconSize) 2.dp else 0.dp)
         )
     }
 }
@@ -78,15 +65,13 @@ private fun CustomIconButtonPreview() {
             CustomIconButton(
                 iconResId = R.drawable.round_aspect_ratio_24,
                 onClick = {},
-                reduceIconSize = true,
-                filledDefaultContainerColor = true
+                reducedIconSize = true
             )
             Spacer(Modifier.height(24.dp))
             CustomIconButton(
                 iconResId = R.drawable.round_skip_next_24,
                 onClick = {},
-                enabled = false,
-                filledDefaultContainerColor = false
+                enabled = false
             )
         }
     }

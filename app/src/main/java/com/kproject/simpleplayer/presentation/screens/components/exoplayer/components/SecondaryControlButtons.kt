@@ -1,4 +1,4 @@
-package com.kproject.simpleplayer.presentation.screens.components.player.components
+package com.kproject.simpleplayer.presentation.screens.components.exoplayer.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -15,10 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kproject.simpleplayer.R
-import com.kproject.simpleplayer.presentation.screens.components.player.PlayerAction
-import com.kproject.simpleplayer.presentation.screens.components.player.RepeatMode
-import com.kproject.simpleplayer.presentation.screens.components.player.ResizeMode
-import com.kproject.simpleplayer.presentation.screens.components.player.playbackSpeedNormal
+import com.kproject.simpleplayer.presentation.screens.components.exoplayer.PlayerAction
+import com.kproject.simpleplayer.presentation.screens.components.exoplayer.RepeatMode
+import com.kproject.simpleplayer.presentation.screens.components.exoplayer.ResizeMode
+import com.kproject.simpleplayer.presentation.screens.components.exoplayer.playbackSpeedNormal
 import com.kproject.simpleplayer.presentation.theme.PreviewTheme
 
 @Composable
@@ -67,7 +67,6 @@ fun SecondaryControlButtons(
                 val newRepeatMode = RepeatMode.getNewRepeatMode(repeatMode)
                 onPlayerAction.invoke(PlayerAction.ChangeRepeatMode(newRepeatMode))
             },
-            reduceIconSize = true,
             modifier = Modifier
         )
 
@@ -78,7 +77,6 @@ fun SecondaryControlButtons(
             onClick = {
                 onPlayerAction.invoke(PlayerAction.ChangeIsLandscapeMode(!isLandscapeMode))
             },
-            reduceIconSize = true,
             modifier = Modifier
         )
 
@@ -86,7 +84,6 @@ fun SecondaryControlButtons(
 
         CustomIconButton(
             iconResId = R.drawable.round_aspect_ratio_24,
-            reduceIconSize = true,
             onClick = {
                 val newResizeMode = ResizeMode.getNewResizeMode(resizeMode)
                 onPlayerAction.invoke(PlayerAction.ChangeResizeMode(newResizeMode))

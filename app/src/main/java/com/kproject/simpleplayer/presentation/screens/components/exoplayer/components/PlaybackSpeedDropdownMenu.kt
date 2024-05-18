@@ -1,4 +1,4 @@
-package com.kproject.simpleplayer.presentation.screens.components.player.components
+package com.kproject.simpleplayer.presentation.screens.components.exoplayer.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.kproject.simpleplayer.presentation.screens.components.player.playbackSpeedOptions
+import com.kproject.simpleplayer.presentation.screens.components.exoplayer.playbackSpeedOptions
 
 @Composable
 fun PlaybackSpeedDropdownMenu(
