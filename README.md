@@ -21,7 +21,7 @@ https://github.com/jsericksk/Simple-Player/assets/36176569/43335cb6-f4d8-43ec-a8
 
 The main objective of this project was to facilitate the creation of a custom video player layout with Compose, aware of the lifecycle and with a state that survives configuration changes and also system-initiated process death. It is just a basic demonstration project of how a basic video player can be created with ExoPlayer and Jetpack Compose.
 
-The player has common basic functions, such as changing the current video, playback speed, aspect ratio, screen orientation, etc. It is fullscreen by default, and it hides the main buttons after a defined time (5 seconds, in our case) or a tap on the screen.
+The player has common basic functions, such as changing the current video, playback speed, aspect ratio, screen orientation, etc. It is fullscreen by default, and it hides the main buttons after a defined time or a tap on the screen.
 
 ## Download
 
