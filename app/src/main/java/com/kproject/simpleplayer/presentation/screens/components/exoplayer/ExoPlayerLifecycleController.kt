@@ -72,9 +72,7 @@ private fun LifecycleObserver(
                 Lifecycle.Event.ON_RESUME -> currentOnResume()
                 Lifecycle.Event.ON_PAUSE -> currentOnPause()
                 Lifecycle.Event.ON_STOP -> currentOnStop()
-                else -> {
-                    Log.d("ActivityLifecycle", "Called any")
-                }
+                else -> Log.d("LifecycleObserver", "Called any")
             }
         }
 

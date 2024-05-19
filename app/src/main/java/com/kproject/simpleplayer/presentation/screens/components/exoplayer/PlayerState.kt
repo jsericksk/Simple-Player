@@ -118,9 +118,3 @@ val playbackSpeedOptions = listOf(
     PlaybackSpeed(1.75f, "1.75x"),
     PlaybackSpeed(2.0f, "2x")
 )
-
-@Parcelize
-data class VideoSize(
-    val width: Int,
-    val height: Int
-) : Parcelable

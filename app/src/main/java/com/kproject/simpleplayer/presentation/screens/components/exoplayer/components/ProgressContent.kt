@@ -38,12 +38,12 @@ fun ProgressContent(
 ) {
     var isChangingPosition by remember { mutableStateOf(false) }
     var temporaryPlaybackPosition by remember { mutableLongStateOf(0L) }
-    val seekerValue = remember(currentPlaybackPosition, isChangingPosition) {
+    val sliderValue = remember(currentPlaybackPosition, isChangingPosition) {
         if (isChangingPosition) temporaryPlaybackPosition else currentPlaybackPosition
     }
 
-    val formattedCurrentVideoTime = remember(seekerValue) {
-        Utils.formatVideoDuration(seekerValue)
+    val formattedCurrentVideoTime = remember(sliderValue) {
+        Utils.formatVideoDuration(sliderValue)
     }
     val formattedVideoDuration = remember(videoDuration) {
         Utils.formatVideoDuration(videoDuration)
@@ -75,7 +75,7 @@ fun ProgressContent(
             )
             Slider(
                 modifier = Modifier.fillMaxWidth(),
-                value = seekerValue.toFloat(),
+                value = sliderValue.toFloat(),
                 onValueChange = { value ->
                     temporaryPlaybackPosition = value.toLong()
                     isChangingPosition = true
