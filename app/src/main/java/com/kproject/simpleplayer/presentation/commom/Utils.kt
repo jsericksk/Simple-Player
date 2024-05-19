@@ -38,10 +38,10 @@ object Utils {
 
     fun changeScreenOrientation(
         context: Context,
-        changeToLandscape: Boolean
+        isLandscapeMode: Boolean
     ) {
         context.findActivity()?.let { activity ->
-            val orientation = if (changeToLandscape) {
+            val orientation = if (isLandscapeMode) {
                 ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             } else {
                 ActivityInfo.SCREEN_ORIENTATION_PORTRAIT

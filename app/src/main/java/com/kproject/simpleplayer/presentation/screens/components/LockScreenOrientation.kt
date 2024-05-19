@@ -11,7 +11,7 @@ fun LockScreenOrientation(isLandscapeMode: Boolean) {
     LaunchedEffect(isLandscapeMode) {
         Utils.changeScreenOrientation(
             context = context,
-            changeToLandscape = isLandscapeMode
+            isLandscapeMode = isLandscapeMode
         )
     }
 }
