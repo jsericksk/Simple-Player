@@ -43,7 +43,6 @@ class MediaPlayerManager(
                     )
                 )
             }
-            player.seekForward()
         }
 
         override fun onPlaybackStateChanged(@Player.State playbackState: Int) {
