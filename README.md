@@ -29,7 +29,7 @@ You can download the apk from the [releases](https://github.com/jsericksk/Simple
 
 ## Basic Version
 
-A more basic version of this project can be found in the [basic-version branch](https://github.com/jsericksk/Simple-Player/tree/basic-version), created to serve as an example for an article on Medium. [Read my article on Medium]() if you want to see more information about this project.
+A more basic version of this project can be found in the [basic-version branch](https://github.com/jsericksk/Simple-Player/tree/basic-version), created to serve as an example for an article on Medium. [Read my article on Medium](https://medium.com/@jsericksk/creating-a-custom-layout-video-player-with-media3-exoplayer-and-jetpack-compose-a87b6b478ebc) if you want to see more information about this project.
 
 ## Libraries Used
 
