@@ -24,9 +24,10 @@ class MediaPlayerManager(
         override fun onEvents(player: Player, events: Player.Events) {
             playerStateHolder.onPlayerStateChange(
                 playerState.copy(
+                    playbackState = player.playbackState.toPlaybackState(),
                     isNextButtonAvailable = isNextButtonAvailable(),
                     isSeekForwardButtonAvailable = isSeekButtonAvailable(isSeekForward = true),
-                    isSeekBackButtonAvailable = isSeekButtonAvailable(isSeekForward = false)
+                    isSeekBackButtonAvailable = isSeekButtonAvailable(isSeekForward = false),
                 )
             )
             val videoDuration = player.duration.coerceAtLeast(0L)
@@ -44,12 +45,6 @@ class MediaPlayerManager(
                     )
                 )
             }
-        }
-
-        override fun onPlaybackStateChanged(@Player.State playbackState: Int) {
-            playerStateHolder.onPlayerStateChange(
-                playerState.copy(playbackState = playbackState.toPlaybackState())
-            )
         }
 
         override fun onPlayWhenReadyChanged(
